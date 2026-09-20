@@ -1,0 +1,491 @@
+KẾT QUẢ BENCHMARK — Lab 7, chủ đề: Học phí / Học bổng / Hỗ trợ tài chính VinUni (2026-09-19)
+Corpus: data\hoc-phi-vinuni — 10 tài liệu
+Embedding: text-embedding-3-small (cached) | LLM (HyDE + trả lời): gpt-4.1-mini | Reranker: cross-encoder/mmarco-mMiniLMv2-L12-H384-v1
+Chấm: 2 = chunk liên quan ở top-1 + câu trả lời đúng; 1 = chunk liên quan trong top-3; 0 = không có.
+'Liên quan' = chunk thuộc tài liệu gold VÀ chứa dữ kiện trả lời (không chỉ đúng doc_id).
+
+====================================================================================================
+1. THỐNG KÊ CHUNK (baseline analysis)
+====================================================================================================
+fixed_size       số chunk= 141  dài TB=   487  min=  88  max=  500
+by_sentences     số chunk= 146  dài TB=   423  min=  11  max= 1772
+recursive        số chunk= 188  dài TB=   329  min=   8  max=  500
+structure_leaf   số chunk= 119  dài TB=   649  min= 171  max= 1193
+structure_aware  số chunk=  70  dài TB=   989  min= 189  max= 2140
+
+====================================================================================================
+Q1 [tra số liệu] Học phí niêm yết một năm của chương trình Cử nhân Điều dưỡng là bao nhiêu?
+   filter: None
+   gold  : 349.650.000 VND/năm (174.825.000 VND/kỳ; 9.780.000 VND/tín chỉ).
+====================================================================================================
+
+-- fixed_size: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.7126 quy-dinh-tai-chinh-bieu-phi#1              [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.6452 hoc-phi-cu-nhan#1                          [all] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5716 hoc-phi-cu-nhan#0                          [all] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học phí niêm yết một năm của chương trình Cử nhân Điều dưỡng là 349.650.000 VND [1], [2].
+
+-- by_sentences: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.6357 hoc-phi-cu-nhan#0                          [all] 
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.6076 quy-dinh-tai-chinh-bieu-phi#1              [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5957 faq-hoc-phi-hoc-bong#1                     [all] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học phí niêm yết một năm của chương trình Cử nhân Điều dưỡng là 349.650.000 VND [1], [2].
+
+-- recursive: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.7308 hoc-phi-cu-nhan#1                          [all] 
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.7154 quy-dinh-tai-chinh-bieu-phi#2              [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5986 quy-dinh-tai-chinh-bieu-phi#61             [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học phí niêm yết một năm của chương trình Cử nhân Điều dưỡng là 349.650.000 đồng [1], [2].
+
+-- structure_leaf: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.6555 hoc-phi-cu-nhan#1                          [all] Học phí niêm yết
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.6126 quy-dinh-tai-chinh-bieu-phi#0              [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > I. HỌC PHÍ NI
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5784 hoc-phi-cu-nhan#3                          [all] Học phí niêm yết
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học phí niêm yết một năm của chương trình Cử nhân Điều dưỡng là 349.650.000 VND [1], [2].
+
+-- structure_tree: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.6559 hoc-phi-cu-nhan#1                          [all] Học phí niêm yết
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.6101 quy-dinh-tai-chinh-bieu-phi#0              [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > I. HỌC PHÍ NI
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5543 quy-dinh-tai-chinh-bieu-phi#16             [student] B. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ CHƯƠNG TRÌNH SAU ĐẠI HỌC > 2. Học ph
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học phí niêm yết một năm của chương trình Cử nhân Điều dưỡng là 349.650.000 VND [1], [2].
+
+-- tree+bm25: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.0328 hoc-phi-cu-nhan#1                          [all] Học phí niêm yết
+      signals={'dense': 1, 'bm25': 1, 'rrf': 0.0328}
+   *2. score=0.0323 quy-dinh-tai-chinh-bieu-phi#0              [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > I. HỌC PHÍ NI
+      signals={'dense': 2, 'bm25': 2, 'rrf': 0.0323}
+    3. score=0.0310 hoc-phi-cu-nhan#2                          [all] Học phí niêm yết
+      signals={'dense': 4, 'bm25': 5, 'rrf': 0.031}
+   Trả lời: Học phí niêm yết một năm của chương trình Cử nhân Điều dưỡng là 349.650.000 VND [1], [2].
+
+-- tree+bm25+hyde: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   HyDE[en]: The listed tuition fee for the Bachelor of Nursing program is [X] VND per academic year. This amount is subject to annual review and adjustment by the University’s Board of Management. Students are re...
+   HyDE[vi]: Học phí niêm yết một năm học của chương trình Cử nhân Điều dưỡng được quy định tại Thông báo học phí hàng năm của Nhà trường và được công bố công khai trên Cổng thông tin điện tử của Trường. Mức học p...
+   *1. score=0.0651 hoc-phi-cu-nhan#1                          [all] Học phí niêm yết
+      signals={'dense': 1, 'hyde_en': 3, 'hyde_vi': 1, 'bm25': 1, 'rrf': 0.0651}
+   *2. score=0.0635 quy-dinh-tai-chinh-bieu-phi#0              [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > I. HỌC PHÍ NI
+      signals={'dense': 2, 'hyde_en': 6, 'hyde_vi': 2, 'bm25': 2, 'rrf': 0.0635}
+    3. score=0.0623 hoc-phi-cu-nhan#2                          [all] Học phí niêm yết
+      signals={'dense': 4, 'hyde_en': 2, 'hyde_vi': 6, 'bm25': 5, 'rrf': 0.0623}
+   Trả lời: Học phí niêm yết một năm của chương trình Cử nhân Điều dưỡng là 349.650.000 VND [1], [2].
+
+-- full[mmarco-mMiniLMv2-L12-H384]: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   HyDE[en]: The listed tuition fee for the Bachelor of Nursing program is [X] VND per academic year. This amount is subject to annual review and adjustment by the University’s Board of Management. Students are re...
+   HyDE[vi]: Học phí niêm yết một năm học của chương trình Cử nhân Điều dưỡng được quy định tại Thông báo học phí hàng năm của Nhà trường và được công bố công khai trên Cổng thông tin điện tử của Trường. Mức học p...
+   *1. score=3.3983 hoc-phi-cu-nhan#1                          [all] Học phí niêm yết
+      signals={'dense': 1, 'hyde_en': 3, 'hyde_vi': 1, 'bm25': 1, 'rrf': 0.0651, 'rerank': 3.3983}
+   *2. score=2.6753 quy-dinh-tai-chinh-bieu-phi#0              [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > I. HỌC PHÍ NI
+      signals={'dense': 2, 'hyde_en': 6, 'hyde_vi': 2, 'bm25': 2, 'rrf': 0.0635, 'rerank': 2.6753}
+   *3. score=1.1257 faq-hoc-phi-hoc-bong#0                     [all] Học phí
+      signals={'dense': 7, 'hyde_en': 4, 'hyde_vi': 7, 'bm25': 3, 'rrf': 0.0613, 'rerank': 1.1257}
+   Trả lời: Học phí niêm yết một năm của chương trình Cử nhân Điều dưỡng là 349.650.000 VND [1], [2].
+
+====================================================================================================
+Q2 [điều kiện] Nếu thôi học trong vòng 2 tuần đầu của học kỳ thì được hoàn trả bao nhiêu phần trăm học phí?
+   filter: None
+   gold  : Hoàn trả 50% học phí thực nộp của học kỳ (trước ngày học đầu tiên: 80%; sau 2 tuần: không hoàn).
+====================================================================================================
+
+-- fixed_size: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.6885 quy-dinh-tai-chinh-bieu-phi#59             [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6574 quy-dinh-tai-chinh-bieu-phi#60             [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.6118 quy-dinh-tai-chinh-bieu-phi#22             [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Nếu thôi học trong vòng 2 tuần đầu của học kỳ thì được hoàn trả 50% học phí thực nộp của học kỳ đó [1].
+
+-- by_sentences: điểm 1/2 | chunk liên quan đầu tiên: 2 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+    1. score=0.7271 quy-dinh-tai-chinh-bieu-phi#56             [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.6821 quy-dinh-tai-chinh-bieu-phi#55             [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.6173 quy-dinh-tai-chinh-bieu-phi#53             [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Nếu thôi học trong vòng 2 tuần đầu của học kỳ thì được hoàn trả 50% học phí thực nộp của học kỳ đó [2].
+
+-- recursive: điểm 1/2 | chunk liên quan đầu tiên: 2 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+    1. score=0.7247 quy-dinh-tai-chinh-bieu-phi#87             [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.6832 quy-dinh-tai-chinh-bieu-phi#86             [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.6449 quy-dinh-tai-chinh-bieu-phi#85             [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Nếu thôi học trong vòng 2 tuần kể từ ngày học đầu tiên của học kỳ thì được hoàn trả 50% học phí thực nộp của học kỳ đó [2].
+
+-- structure_leaf: điểm 1/2 | chunk liên quan đầu tiên: 3 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+    1. score=0.6619 faq-hoc-phi-hoc-bong#2                     [all] Học phí > Tôi sẽ nộp học phí theo kỳ hay theo năm?
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6481 quy-dinh-tai-chinh-bieu-phi#46             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 2, 'rrf': 0.0161}
+   *3. score=0.6360 quy-dinh-tai-chinh-bieu-phi#45             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Nếu thôi học trong vòng 2 tuần kể từ ngày học đầu tiên của học kỳ, sinh viên được hoàn trả 50% học phí thực nộp của học kỳ đó [3].
+
+-- structure_tree: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.6275 quy-dinh-tai-chinh-bieu-phi#24             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.5953 faq-hoc-phi-hoc-bong#0                     [all] Học phí
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5912 faq-hoc-phi-hoc-bong#3                     [all] Học bổng và Hỗ trợ Tài chính > Nếu không đáp ứng được điều kiện duy tr
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Nếu thôi học trong vòng 2 tuần kể từ ngày học đầu tiên của học kỳ, sinh viên được hoàn trả 50% học phí thực nộp của học kỳ đó [1].
+
+-- tree+bm25: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.0328 quy-dinh-tai-chinh-bieu-phi#24             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'bm25': 1, 'rrf': 0.0328}
+    2. score=0.0315 quy-dinh-tai-chinh-bieu-phi#10             [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > II. CÁC KHOẢN
+      signals={'dense': 5, 'bm25': 2, 'rrf': 0.0315}
+    3. score=0.0315 faq-hoc-phi-hoc-bong#3                     [all] Học bổng và Hỗ trợ Tài chính > Nếu không đáp ứng được điều kiện duy tr
+      signals={'dense': 3, 'bm25': 4, 'rrf': 0.0315}
+   Trả lời: Nếu thôi học trong vòng 2 tuần kể từ ngày học đầu tiên của học kỳ, sinh viên được hoàn trả 50% học phí thực nộp của học kỳ đó [1].
+
+-- tree+bm25+hyde: điểm 1/2 | chunk liên quan đầu tiên: 2 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   HyDE[en]: Students who officially withdraw from the university within the first two weeks of the semester are entitled to a refund of [X]% of the listed tuition fee. Requests for tuition refund must be submitte...
+   HyDE[vi]: Theo quy định của Nhà trường, sinh viên thôi học trong vòng 2 tuần đầu của học kỳ được hoàn trả [X]% học phí niêm yết của học kỳ đó, sau khi trừ các khoản phí dịch vụ đã sử dụng (nếu có). Việc hoàn tr...
+    1. score=0.0630 quy-dinh-tai-chinh-bieu-phi#10             [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > II. CÁC KHOẢN
+      signals={'dense': 5, 'hyde_en': 4, 'hyde_vi': 3, 'bm25': 2, 'rrf': 0.063}
+   *2. score=0.0629 quy-dinh-tai-chinh-bieu-phi#24             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'hyde_en': 13, 'hyde_vi': 1, 'bm25': 1, 'rrf': 0.0629}
+    3. score=0.0604 quy-dinh-tai-chinh-bieu-phi#23             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 7, 'hyde_en': 14, 'hyde_vi': 2, 'bm25': 3, 'rrf': 0.0604}
+   Trả lời: Nếu thôi học trong vòng 2 tuần kể từ ngày học đầu tiên của học kỳ thì được hoàn trả 50% Học phí thực nộp của học kỳ đó [2].
+
+-- full[mmarco-mMiniLMv2-L12-H384]: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   HyDE[en]: Students who officially withdraw from the university within the first two weeks of the semester are entitled to a refund of [X]% of the listed tuition fee. Requests for tuition refund must be submitte...
+   HyDE[vi]: Theo quy định của Nhà trường, sinh viên thôi học trong vòng 2 tuần đầu của học kỳ được hoàn trả [X]% học phí niêm yết của học kỳ đó, sau khi trừ các khoản phí dịch vụ đã sử dụng (nếu có). Việc hoàn tr...
+   *1. score=6.0056 quy-dinh-tai-chinh-bieu-phi#24             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'hyde_en': 13, 'hyde_vi': 1, 'bm25': 1, 'rrf': 0.0629, 'rerank': 6.0056}
+    2. score=1.7620 quy-dinh-tai-chinh-bieu-phi#23             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 7, 'hyde_en': 14, 'hyde_vi': 2, 'bm25': 3, 'rrf': 0.0604, 'rerank': 1.762}
+    3. score=-0.0043 quy-dinh-tai-chinh-bieu-phi#28             [student] E. CÁC QUY ĐỊNH KHÁC LIÊN QUAN > 1. Thời hạn, hình thức nộp Học phí, c
+      signals={'dense': 15, 'hyde_en': 6, 'hyde_vi': 4, 'bm25': 5, 'rrf': 0.0595, 'rerank': -0.0043}
+   Trả lời: Nếu thôi học trong vòng 2 tuần kể từ ngày học đầu tiên của học kỳ thì được hoàn trả 50% Học phí thực nộp của học kỳ đó [1].
+
+====================================================================================================
+Q3 [điều kiện — cần lọc audience] Học bổng 100% mà điểm trung bình năm học chỉ đạt 2,8 thì có bị hạ học bổng không?
+   filter: {'audience': 'student'}
+   gold  : Không bị hạ ngay: GPA năm học 2,50–3,19 được 'duy trì học bổng có điều kiện', gia hạn thêm 1 học kỳ để cải thiện kết quả và thể hiện E.X.C.E.L; chỉ tự động hạ 1 bậc khi GPA 0,0–2,49 (GDL-SAM-004 V2.1). Bẫy: FAQ tuyển sinh (audience=all) nói chung chung là 'giảm 1 bậc (10%)'.
+====================================================================================================
+
+-- fixed_size: điểm 1/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: không
+   *1. score=0.6442 duy-tri-hoc-bong-ho-tro-tai-chinh#4        [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6137 duy-tri-hoc-bong-ho-tro-tai-chinh#5        [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5779 duy-tri-hoc-bong-ho-tro-tai-chinh#2        [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học bổng 100% yêu cầu duy trì điểm trung bình chung tích lũy từ 3,2 trở lên trong năm học được đánh giá. Nếu điểm trung bình năm học chỉ đạt 2,8, sinh viên không đủ điều kiện duy trì học bổng 100% và có thể bị hạ học bổng theo quy định [3], [1].
+
+-- by_sentences: điểm 1/2 | chunk liên quan đầu tiên: 3 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: không
+    1. score=0.6119 duy-tri-hoc-bong-ho-tro-tai-chinh#3        [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6061 duy-tri-hoc-bong-ho-tro-tai-chinh#7        [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+   *3. score=0.5837 duy-tri-hoc-bong-ho-tro-tai-chinh#5        [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học bổng 100% sẽ bị hạ học bổng nếu điểm trung bình chung năm học chỉ đạt 2,8 vì điểm này nằm trong khoảng 2,50 - 3,19, tức là dưới mức yêu cầu duy trì CGPA từ 3,2 trở lên cho học bổng toàn phần. Theo quy định, sinh viên sẽ duy trì học bổng có điều kiện hoặc bị hạ 1 bậc học bổng nếu điểm dưới 3,2 [1], [3].
+
+-- recursive: điểm 1/2 | chunk liên quan đầu tiên: 3 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+    1. score=0.6517 duy-tri-hoc-bong-ho-tro-tai-chinh#5        [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6438 duy-tri-hoc-bong-ho-tro-tai-chinh#9        [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+   *3. score=0.6288 duy-tri-hoc-bong-ho-tro-tai-chinh#6        [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học bổng 100% với điểm trung bình năm học 2,8 sẽ không bị hạ học bổng mà được duy trì có điều kiện, sinh viên sẽ được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập và thể hiện tố chất E.X.C.E.L [3].
+
+-- structure_leaf: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.6313 duy-tri-hoc-bong-ho-tro-tai-chinh#3        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 1. Học bổng 
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6291 duy-tri-hoc-bong-ho-tro-tai-chinh#4        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 2. Học bổng 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.6130 duy-tri-hoc-bong-ho-tro-tai-chinh#2        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 1. Học bổng 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học bổng 100% mà điểm trung bình năm học chỉ đạt 2,8 thì sẽ được duy trì học bổng có điều kiện, sinh viên được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập và thể hiện tố chất E.X.C.E.L. Điểm trung bình chung học tập và thành tích E.X.C.E.L tại thời điểm đánh giá lại sẽ được sử dụng để xem xét [1].
+
+-- structure_tree: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.6342 duy-tri-hoc-bong-ho-tro-tai-chinh#2        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 1. Học bổng 
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6291 duy-tri-hoc-bong-ho-tro-tai-chinh#3        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 2. Học bổng 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5579 duy-tri-hoc-bong-ho-tro-tai-chinh#4        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Học bổng 100% nếu điểm trung bình chung năm học đạt 2,8 (từ 2,50 - 3,19) sẽ được duy trì có điều kiện và được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập. Nếu không cải thiện, có thể bị hạ 1 bậc học bổng. [1]
+
+-- tree+bm25: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.0328 duy-tri-hoc-bong-ho-tro-tai-chinh#2        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 1. Học bổng 
+      signals={'dense': 1, 'bm25': 1, 'rrf': 0.0328}
+    2. score=0.0323 duy-tri-hoc-bong-ho-tro-tai-chinh#3        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 2. Học bổng 
+      signals={'dense': 2, 'bm25': 2, 'rrf': 0.0323}
+    3. score=0.0317 duy-tri-hoc-bong-ho-tro-tai-chinh#4        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào
+      signals={'dense': 3, 'bm25': 3, 'rrf': 0.0317}
+   Trả lời: Học bổng 100% nếu điểm trung bình chung năm học đạt 2,8 (từ 2,50 - 3,19) sẽ được duy trì có điều kiện và được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập. Nếu không cải thiện, có thể bị hạ 1 bậc học bổng. [1]
+
+-- tree+bm25+hyde: điểm 1/2 | chunk liên quan đầu tiên: 2 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   HyDE[en]: According to the university’s scholarship policy, recipients of a 100% merit scholarship must maintain a minimum cumulative GPA of [X] each academic year to retain the full scholarship amount. If a st...
+   HyDE[vi]: Theo quy định về chính sách học bổng của Nhà trường, sinh viên được xét duyệt học bổng tài năng 100% phải duy trì điểm trung bình năm học tối thiểu là [X]. Trường hợp điểm trung bình năm học của sinh ...
+    1. score=0.0648 duy-tri-hoc-bong-ho-tro-tai-chinh#3        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 2. Học bổng 
+      signals={'dense': 2, 'hyde_en': 2, 'hyde_vi': 1, 'bm25': 2, 'rrf': 0.0648}
+   *2. score=0.0645 duy-tri-hoc-bong-ho-tro-tai-chinh#2        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 1. Học bổng 
+      signals={'dense': 1, 'hyde_en': 4, 'hyde_vi': 2, 'bm25': 1, 'rrf': 0.0645}
+    3. score=0.0596 duy-tri-hoc-bong-ho-tro-tai-chinh#4        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào
+      signals={'dense': 3, 'hyde_en': 8, 'hyde_vi': 16, 'bm25': 3, 'rrf': 0.0596}
+   Trả lời: Học bổng 100% yêu cầu duy trì điểm trung bình chung tích lũy (CGPA) từ 3,2 trở lên. Nếu điểm trung bình năm học đạt 2,8 (từ 2,50 - 3,19), sinh viên sẽ được duy trì học bổng có điều kiện và được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập. Nếu điểm dưới 2,5 sẽ bị tự động hạ 1 bậc học bổng [2].
+
+-- full[mmarco-mMiniLMv2-L12-H384]: điểm 1/2 | chunk liên quan đầu tiên: 2 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   HyDE[en]: According to the university’s scholarship policy, recipients of a 100% merit scholarship must maintain a minimum cumulative GPA of [X] each academic year to retain the full scholarship amount. If a st...
+   HyDE[vi]: Theo quy định về chính sách học bổng của Nhà trường, sinh viên được xét duyệt học bổng tài năng 100% phải duy trì điểm trung bình năm học tối thiểu là [X]. Trường hợp điểm trung bình năm học của sinh ...
+    1. score=1.7353 duy-tri-hoc-bong-ho-tro-tai-chinh#3        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 2. Học bổng 
+      signals={'dense': 2, 'hyde_en': 2, 'hyde_vi': 1, 'bm25': 2, 'rrf': 0.0648, 'rerank': 1.7353}
+   *2. score=1.6744 duy-tri-hoc-bong-ho-tro-tai-chinh#2        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 1. Học bổng 
+      signals={'dense': 1, 'hyde_en': 4, 'hyde_vi': 2, 'bm25': 1, 'rrf': 0.0645, 'rerank': 1.6744}
+    3. score=-0.9801 duy-tri-hoc-bong-ho-tro-tai-chinh#4        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào
+      signals={'dense': 3, 'hyde_en': 8, 'hyde_vi': 16, 'bm25': 3, 'rrf': 0.0596, 'rerank': -0.9801}
+   Trả lời: Học bổng 100% yêu cầu duy trì điểm trung bình chung tích lũy (CGPA) từ 3,2 trở lên. Nếu điểm trung bình năm học đạt 2,8 (từ 2,50 - 3,19), sinh viên sẽ được duy trì học bổng có điều kiện và được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập. Nếu điểm dưới 2,5 sẽ bị tự động hạ 1 bậc học bổng [2].
+
+====================================================================================================
+Q4 [liệt kê] Có những chính sách ưu đãi học phí hoặc chiết khấu đóng phí nào?
+   filter: None
+   gold  : Ưu đãi Gia đình giảm 2,5% (từ người thứ 2); ưu đãi Cựu sinh viên 10%; chiết khấu 5% khi đóng học phí và phí KTX cả năm đúng hạn. Ưu đãi cựu SV không cộng với ưu đãi gia đình.
+====================================================================================================
+
+-- fixed_size: điểm 1/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 67% | trả lời đúng: không
+   *1. score=0.6955 quy-dinh-tai-chinh-bieu-phi#50             [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6513 quy-dinh-tai-chinh-bieu-phi#54             [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.6469 faq-hoc-phi-hoc-bong#0                     [all] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: VinUni có chính sách ưu đãi học phí cho gia đình giảm 2,5% học phí niêm yết khi sinh viên chứng minh có người thân trong gia đình (anh/chị/em ruột, cha, mẹ, vợ, chồng hoặc con hợp pháp) [2]. Các ưu đãi học phí đặc biệt và chiết khấu đóng phí theo năm học được áp dụng đồng thời với chương trình học bổng [2]. Học phí không thay đổi trong suốt quá trình học [1], [3].
+
+-- by_sentences: điểm 1/2 | chunk liên quan đầu tiên: 2 | doc_id gold trong top-3: có | độ phủ dữ kiện: 67% | trả lời đúng: không
+    1. score=0.6847 quy-dinh-tai-chinh-bieu-phi#51             [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.6559 quy-dinh-tai-chinh-bieu-phi#46             [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.6438 quy-dinh-tai-chinh-bieu-phi#36             [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Có các chính sách ưu đãi học phí và chiết khấu đóng phí như sau:   - Ưu đãi học phí đặc biệt và chiết khấu đóng phí theo năm học được áp dụng đồng thời với chương trình học bổng, bắt đầu từ kỳ Thu năm 2025 [1].   - Giảm 2,5% học phí niêm yết cho sinh viên có người thân trong gia đình đang cùng học tại VinUni, áp dụng từ người thứ 2 trong gia đình [2].
+
+-- recursive: điểm 0/2 | chunk liên quan đầu tiên: - | doc_id gold trong top-3: có | độ phủ dữ kiện: 33% | trả lời đúng: không
+    1. score=0.7096 quy-dinh-tai-chinh-bieu-phi#78             [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6904 quy-dinh-tai-chinh-bieu-phi#72             [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.6747 quy-dinh-tai-chinh-bieu-phi#77             [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Có các chính sách ưu đãi học phí và chiết khấu đóng phí sau:  - Ưu đãi học phí cho Gia đình (chi tiết không nêu rõ trong ngữ cảnh) [2]. - Chiết khấu 5% khi sinh viên đóng học phí và phí ký túc xá cho cả năm học, áp dụng khi đóng phí đúng hạn theo thông báo của Nhà trường [3]. - Các ưu đãi học phí đặc biệt và chiết khấu đóng phí theo năm học được áp dụng đồng thời với chương trình học bổng [1]. - Lưu ý: Chính sách ưu đãi học phí đặc biệt cho cựu sinh viên không áp dụng đồng thời với ưu đãi cho Gia đình [1].
+
+-- structure_leaf: điểm 0/2 | chunk liên quan đầu tiên: - | doc_id gold trong top-3: có | độ phủ dữ kiện: 33% | trả lời đúng: không
+    1. score=0.6940 quy-dinh-tai-chinh-bieu-phi#40             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6727 quy-dinh-tai-chinh-bieu-phi#41             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.6421 quy-dinh-tai-chinh-bieu-phi#5              [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > II. CÁC KHOẢN
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Sinh viên đóng học phí và phí ký túc xá cho cả năm học sẽ được chiết khấu 5% trên số tiền phải thu trước chiết khấu, nếu đóng phí đúng hạn theo thông báo của Nhà trường [1]. Các ưu đãi học phí đặc biệt và chiết khấu đóng phí theo năm học được áp dụng đồng thời với chương trình học bổng, bắt đầu từ kỳ Thu năm 2025 [2].
+
+-- structure_tree: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.6770 quy-dinh-tai-chinh-bieu-phi#21             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.6421 quy-dinh-tai-chinh-bieu-phi#3              [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > II. CÁC KHOẢN
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.6417 quy-dinh-tai-chinh-bieu-phi#24             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Trường Đại học VinUni có các chính sách ưu đãi học phí và chiết khấu đóng phí như sau:  1. Ưu đãi học phí cho Gia đình: Giảm 2,5% học phí niêm yết cho sinh viên có người thân trong gia đình đang học tại VinUni, áp dụng từ người thứ 2 trong gia đình [1].  2. Ưu đãi học phí cho Cựu sinh viên: Giảm 10% học phí niêm yết khi học tiếp văn bằng đại học thứ hai hoặc chương trình sau đại học, không áp dụng đồng thời với ưu đãi cho Gia đình [1].  3. Chiết khấu đóng phí theo năm học: Giảm 5% trên tổng số tiền học phí và phí ký túc xá khi đóng cả năm học đúng hạn [1].  Các ưu đãi này được áp dụng đồng thờ
+
+-- tree+bm25: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   *1. score=0.0328 quy-dinh-tai-chinh-bieu-phi#21             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'bm25': 1, 'rrf': 0.0328}
+    2. score=0.0320 quy-dinh-tai-chinh-bieu-phi#3              [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > II. CÁC KHOẢN
+      signals={'dense': 2, 'bm25': 3, 'rrf': 0.032}
+    3. score=0.0308 quy-dinh-tai-chinh-bieu-phi#24             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 3, 'bm25': 7, 'rrf': 0.0308}
+   Trả lời: Trường Đại học VinUni có các chính sách ưu đãi học phí và chiết khấu đóng phí như sau:  1. Ưu đãi học phí cho Gia đình: Giảm 2,5% học phí niêm yết cho sinh viên có người thân trong gia đình đang học tại VinUni, áp dụng từ người thứ 2 trong gia đình [1].  2. Ưu đãi học phí cho Cựu sinh viên: Giảm 10% học phí niêm yết khi học tiếp văn bằng đại học thứ hai hoặc chương trình sau đại học, không áp dụng đồng thời với ưu đãi cho Gia đình [1].  3. Chiết khấu đóng phí theo năm học: Giảm 5% trên tổng số tiền học phí và phí ký túc xá khi đóng cả năm học đúng hạn [1].  Các ưu đãi này được áp dụng đồng thờ
+
+-- tree+bm25+hyde: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   HyDE[en]: The University offers tuition fee discounts and merit-based scholarships to eligible students as outlined in the official tuition fee schedule. Students who apply within the designated application per...
+   HyDE[vi]: Nhà trường áp dụng chính sách ưu đãi học phí đối với sinh viên đạt thành tích học tập xuất sắc, cụ thể là sinh viên có điểm trung bình học kỳ từ [X] trở lên sẽ được xét cấp học bổng tài năng hoặc chiế...
+   *1. score=0.0629 quy-dinh-tai-chinh-bieu-phi#21             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'hyde_en': 9, 'hyde_vi': 4, 'bm25': 1, 'rrf': 0.0629}
+    2. score=0.0628 quy-dinh-tai-chinh-bieu-phi#3              [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > II. CÁC KHOẢN
+      signals={'dense': 2, 'hyde_en': 8, 'hyde_vi': 2, 'bm25': 3, 'rrf': 0.0628}
+    3. score=0.0556 quy-dinh-tai-chinh-bieu-phi#10             [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > II. CÁC KHOẢN
+      signals={'dense': 16, 'hyde_en': 12, 'hyde_vi': 16, 'bm25': 5, 'rrf': 0.0556}
+   Trả lời: Trường Đại học VinUni có các chính sách ưu đãi học phí và chiết khấu đóng phí như sau:  1. Ưu đãi học phí cho Gia đình: Giảm 2,5% học phí niêm yết cho sinh viên có người thân trong gia đình đang học tại VinUni, áp dụng từ người thứ 2 trong gia đình [1].  2. Ưu đãi học phí cho Cựu sinh viên: Giảm 10% học phí niêm yết khi học tiếp văn bằng đại học thứ hai hoặc chương trình sau đại học, không áp dụng đồng thời với ưu đãi cho Gia đình [1].  3. Chiết khấu đóng phí theo năm học: Giảm 5% trên tổng số tiền học phí và phí ký túc xá khi đóng phí cho cả năm học đúng hạn [1].  Các ưu đãi này được áp dụng 
+
+-- full[mmarco-mMiniLMv2-L12-H384]: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   HyDE[en]: The University offers tuition fee discounts and merit-based scholarships to eligible students as outlined in the official tuition fee schedule. Students who apply within the designated application per...
+   HyDE[vi]: Nhà trường áp dụng chính sách ưu đãi học phí đối với sinh viên đạt thành tích học tập xuất sắc, cụ thể là sinh viên có điểm trung bình học kỳ từ [X] trở lên sẽ được xét cấp học bổng tài năng hoặc chiế...
+   *1. score=3.4040 quy-dinh-tai-chinh-bieu-phi#21             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'hyde_en': 9, 'hyde_vi': 4, 'bm25': 1, 'rrf': 0.0629, 'rerank': 3.404}
+    2. score=-0.5493 quy-dinh-tai-chinh-bieu-phi#24             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 3, 'hyde_vi': 11, 'bm25': 7, 'rrf': 0.0449, 'rerank': -0.5493}
+    3. score=-0.6298 faq-hoc-phi-hoc-bong#6                     [all] Học bổng và Hỗ trợ Tài chính > Có những mức học bổng và ưu đãi nào dàn
+      signals={'dense': 4, 'hyde_en': 4, 'bm25': 9, 'rrf': 0.0457, 'rerank': -0.6298}
+   Trả lời: VinUni có các chính sách ưu đãi học phí và chiết khấu đóng phí như sau:  1. Ưu đãi học phí cho Gia đình: Giảm 2,5% học phí niêm yết cho sinh viên có người thân trong gia đình đang học tại VinUni, áp dụng từ người thứ 2 trong gia đình [1].  2. Ưu đãi học phí cho Cựu sinh viên: Giảm 10% học phí niêm yết khi học văn bằng đại học thứ hai hoặc chương trình sau đại học, không áp dụng đồng thời với ưu đãi cho Gia đình [1].  3. Chiết khấu đóng phí theo năm học: Giảm 5% trên tổng số tiền học phí và phí ký túc xá khi đóng cả năm học đúng hạn [1].  Các ưu đãi này được áp dụng đồng thời với chương trình h
+
+====================================================================================================
+Q5 [mốc thời gian (hỏi tiếng Việt, nguồn tiếng Anh) — cần lọc audience] Hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu là khi nào?
+   filter: {'audience': 'student'}
+   gold  : Đợt nộp 20/6 – 10/7 (hạn 10/7), hạn xử lý 02/8, áp dụng cho học kỳ Thu (GDL-FAO-001). Bẫy: trang tân sinh viên (audience=all) ghi hạn '23:59 ngày 15 của tháng liền kề trước'.
+====================================================================================================
+
+-- fixed_size: điểm 1/2 | chunk liên quan đầu tiên: 2 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: không
+    1. score=0.5836 ho-tro-tai-chinh-sinh-vien-dang-hoc#0      [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.5833 ho-tro-tai-chinh-sinh-vien-dang-hoc#1      [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5455 quy-dinh-tai-chinh-bieu-phi#53             [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu là trong kỳ xét Hỗ trợ Tài chính vào tháng 7 hàng năm [1], [2].
+
+-- by_sentences: điểm 1/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: không
+   *1. score=0.5820 ho-tro-tai-chinh-sinh-vien-dang-hoc#0      [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.5540 duy-tri-hoc-bong-ho-tro-tai-chinh#12       [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5497 quy-dinh-tai-chinh-bieu-phi#66             [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Không tìm thấy thông tin trong tài liệu được cung cấp về hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu.
+
+-- recursive: điểm 1/2 | chunk liên quan đầu tiên: 2 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: không
+    1. score=0.5696 ho-tro-tai-chinh-sinh-vien-dang-hoc#0      [student] 
+      signals={'dense': 1, 'rrf': 0.0164}
+   *2. score=0.5667 ho-tro-tai-chinh-sinh-vien-dang-hoc#1      [student] 
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5432 quy-dinh-tai-chinh-bieu-phi#74             [student] 
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu là kỳ xét vào tháng 7 hàng năm [2].
+
+-- structure_leaf: điểm 0/2 | chunk liên quan đầu tiên: - | doc_id gold trong top-3: không | độ phủ dữ kiện: 0% | trả lời đúng: không
+    1. score=0.5717 quy-dinh-tai-chinh-bieu-phi#46             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.5599 quy-dinh-tai-chinh-bieu-phi#22             [student] A. QUY ĐỊNH TÀI CHÍNH VÀ BIỂU PHÍ HỆ ĐẠI HỌC CHÍNH QUY > II. CÁC KHOẢN
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5586 quy-dinh-tai-chinh-bieu-phi#48             [student] E. CÁC QUY ĐỊNH KHÁC LIÊN QUAN > 1. Thời hạn, hình thức nộp Học phí, c
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Không tìm thấy thông tin trong tài liệu được cung cấp.
+
+-- structure_tree: điểm 0/2 | chunk liên quan đầu tiên: - | doc_id gold trong top-3: không | độ phủ dữ kiện: 0% | trả lời đúng: không
+    1. score=0.5586 quy-dinh-tai-chinh-bieu-phi#25             [student] E. CÁC QUY ĐỊNH KHÁC LIÊN QUAN > 1. Thời hạn, hình thức nộp Học phí, c
+      signals={'dense': 1, 'rrf': 0.0164}
+    2. score=0.5382 quy-dinh-tai-chinh-bieu-phi#30             [student] E. CÁC QUY ĐỊNH KHÁC LIÊN QUAN > 2. Quyết toán các khoản phải thu - ph
+      signals={'dense': 2, 'rrf': 0.0161}
+    3. score=0.5371 quy-dinh-tai-chinh-bieu-phi#23             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 3, 'rrf': 0.0159}
+   Trả lời: Không tìm thấy thông tin trong tài liệu được cung cấp.
+
+-- tree+bm25: điểm 0/2 | chunk liên quan đầu tiên: - | doc_id gold trong top-3: không | độ phủ dữ kiện: 0% | trả lời đúng: không
+    1. score=0.0311 duy-tri-hoc-bong-ho-tro-tai-chinh#4        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào
+      signals={'dense': 7, 'bm25': 2, 'rrf': 0.0311}
+    2. score=0.0310 quy-dinh-tai-chinh-bieu-phi#23             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 3, 'bm25': 6, 'rrf': 0.031}
+    3. score=0.0303 quy-dinh-tai-chinh-bieu-phi#24             [student] D. CHÍNH SÁCH LIÊN QUAN ĐẾN HỌC PHÍ, HỌC BỔNG VÀ HỖ TRỢ TÀI CHÍNH & ƯU
+      signals={'dense': 8, 'bm25': 4, 'rrf': 0.0303}
+   Trả lời: Không tìm thấy thông tin trong tài liệu được cung cấp.
+
+-- tree+bm25+hyde: điểm 1/2 | chunk liên quan đầu tiên: 2 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: không
+   HyDE[en]: The application period for financial aid for the Fall semester shall commence on [start date] and conclude on [end date]. All eligible students must submit complete financial aid applications, includi...
+   HyDE[vi]: Thời hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu được quy định chậm nhất vào ngày [X] trước khi bắt đầu học kỳ. Sinh viên có nhu cầu hỗ trợ tài chính phải hoàn thành đầy đủ hồ sơ theo mẫu qu...
+    1. score=0.0592 quy-dinh-tai-chinh-bieu-phi#25             [student] E. CÁC QUY ĐỊNH KHÁC LIÊN QUAN > 1. Thời hạn, hình thức nộp Học phí, c
+      signals={'dense': 1, 'hyde_en': 13, 'hyde_vi': 4, 'bm25': 14, 'rrf': 0.0592}
+   *2. score=0.0583 ho-tro-tai-chinh-sinh-vien-dang-hoc#0      [student] (mở đầu)
+      signals={'dense': 5, 'hyde_en': 14, 'hyde_vi': 7, 'bm25': 9, 'rrf': 0.0583}
+    3. score=0.0574 duy-tri-hoc-bong-ho-tro-tai-chinh#3        [student] 3. Điều kiện duy trì Học bổng, Hỗ trợ tài chính đầu vào > 2. Học bổng 
+      signals={'dense': 9, 'hyde_en': 18, 'hyde_vi': 8, 'bm25': 5, 'rrf': 0.0574}
+   Trả lời: Hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu là trong kỳ xét hỗ trợ tài chính vào tháng 7 hàng năm [2].
+
+-- full[mmarco-mMiniLMv2-L12-H384]: điểm 2/2 | chunk liên quan đầu tiên: 1 | doc_id gold trong top-3: có | độ phủ dữ kiện: 100% | trả lời đúng: có
+   HyDE[en]: The application period for financial aid for the Fall semester shall commence on [start date] and conclude on [end date]. All eligible students must submit complete financial aid applications, includi...
+   HyDE[vi]: Thời hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu được quy định chậm nhất vào ngày [X] trước khi bắt đầu học kỳ. Sinh viên có nhu cầu hỗ trợ tài chính phải hoàn thành đầy đủ hồ sơ theo mẫu qu...
+   *1. score=4.3951 huong-dan-de-nghi-ho-tro-tai-chinh#4       [student] 4. Financial Support Request Procedures > 2. Submit Financial Support 
+      signals={'hyde_en': 2, 'rrf': 0.0161, 'rerank': 4.3951}
+   *2. score=2.1506 huong-dan-de-nghi-ho-tro-tai-chinh#2       [student] 3. Timelines
+      signals={'dense': 11, 'hyde_en': 1, 'rrf': 0.0305, 'rerank': 2.1506}
+   *3. score=0.1959 ho-tro-tai-chinh-sinh-vien-dang-hoc#0      [student] (mở đầu)
+      signals={'dense': 5, 'hyde_en': 14, 'hyde_vi': 7, 'bm25': 9, 'rrf': 0.0583, 'rerank': 0.1959}
+   Trả lời: Hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu là ngày 10 tháng 7 hàng năm [1], [2].
+
+====================================================================================================
+2. TỔNG HỢP (điểm /10 theo docs/SCORING.md)
+====================================================================================================
+strategy                            Q1   Q2   Q3   Q4   Q5   tổng   doc-hit@3   relevant@3   MRR    trả lời đúng
+fixed_size                           2    2    1    1    1    7/10   5/5         5/5          0.90   2/5
+by_sentences                         2    1    1    1    1    6/10   5/5         5/5          0.67   2/5
+recursive                            2    1    1    0    1    5/10   5/5         4/5          0.47   3/5
+structure_leaf                       2    1    2    0    0    5/10   4/5         3/5          0.47   3/5
+structure_tree                       2    2    2    2    0    8/10   4/5         4/5          0.80   4/5
+tree+bm25                            2    2    2    2    0    8/10   4/5         4/5          0.80   4/5
+tree+bm25+hyde                       2    1    1    2    1    7/10   5/5         5/5          0.70   4/5
+full[mmarco-mMiniLMv2-L12-H384]      2    2    1    2    2    9/10   5/5         5/5          0.90   5/5
+
+====================================================================================================
+3. A/B METADATA FILTER {'audience': 'student'} (các câu cần lọc)
+====================================================================================================
+Q3 | fixed_size                       | có filter  : điểm 1 | duy-tri-hoc-bong-ho-tro-tai-chinh#4[student], duy-tri-hoc-bong-ho-tro-tai-chinh#5[student], duy-tri-hoc-bong-ho-tro-tai-chinh#2[student]
+   |                                  | không filter: điểm 1 | duy-tri-hoc-bong-ho-tro-tai-chinh#4[student], duy-tri-hoc-bong-ho-tro-tai-chinh#5[student], faq-hoc-phi-hoc-bong#3[all]
+   |                                  | trả lời không filter: Học bổng 100% yêu cầu duy trì điểm trung bình chung năm học tối thiểu 3,2 trở lên. Nếu điểm trung bình chỉ đạt 2,8 thì sẽ không đủ điều kiện duy trì học bổng 100% và có thể bị hạ học bổng [3], [1].
+Q3 | by_sentences                     | có filter  : điểm 1 | duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], duy-tri-hoc-bong-ho-tro-tai-chinh#7[student], duy-tri-hoc-bong-ho-tro-tai-chinh#5[student]
+   |                                  | không filter: điểm 0 | faq-hoc-phi-hoc-bong#7[all], duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], duy-tri-hoc-bong-ho-tro-tai-chinh#7[student]
+   |                                  | trả lời không filter: Học bổng 100% yêu cầu duy trì CGPA từ 3,2 trở lên. Nếu điểm trung bình năm học chỉ đạt 2,8 thì không đáp ứng điều kiện duy trì, do đó học bổng sẽ bị giảm 1 bậc (giảm 10%) [1], [2], [3].
+Q3 | recursive                        | có filter  : điểm 1 | duy-tri-hoc-bong-ho-tro-tai-chinh#5[student], duy-tri-hoc-bong-ho-tro-tai-chinh#9[student], duy-tri-hoc-bong-ho-tro-tai-chinh#6[student]
+   |                                  | không filter: điểm 1 | duy-tri-hoc-bong-ho-tro-tai-chinh#5[student], duy-tri-hoc-bong-ho-tro-tai-chinh#9[student], duy-tri-hoc-bong-ho-tro-tai-chinh#6[student]
+   |                                  | trả lời không filter: Học bổng 100% với điểm trung bình năm học 2,8 sẽ không bị hạ học bổng mà được duy trì có điều kiện, sinh viên sẽ được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập và thể hiện tố chất E.X.C.E.L [3].
+Q3 | structure_leaf                   | có filter  : điểm 2 | duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], duy-tri-hoc-bong-ho-tro-tai-chinh#4[student], duy-tri-hoc-bong-ho-tro-tai-chinh#2[student]
+   |                                  | không filter: điểm 2 | duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], duy-tri-hoc-bong-ho-tro-tai-chinh#4[student], faq-hoc-phi-hoc-bong#6[all]
+   |                                  | trả lời không filter: Nếu điểm trung bình năm học đạt 2,8 (tương đương học lực khá trở lên), sinh viên sẽ được duy trì học bổng có điều kiện và được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập và thể hiện tố chất E.X.C.E.L. Điểm trung bình và thành tích E.X.C.E.L tại thời điểm đánh giá lại sẽ được sử dụng để xem
+Q3 | structure_tree                   | có filter  : điểm 2 | duy-tri-hoc-bong-ho-tro-tai-chinh#2[student], duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], duy-tri-hoc-bong-ho-tro-tai-chinh#4[student]
+   |                                  | không filter: điểm 2 | duy-tri-hoc-bong-ho-tro-tai-chinh#2[student], duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], faq-hoc-phi-hoc-bong#3[all]
+   |                                  | trả lời không filter: Nếu điểm trung bình năm học đạt 2,8 (từ 2,50 - 3,19), sinh viên sẽ được duy trì học bổng có điều kiện và được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập, không bị tự động hạ học bổng ngay lập tức [1].
+Q3 | tree+bm25                        | có filter  : điểm 2 | duy-tri-hoc-bong-ho-tro-tai-chinh#2[student], duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], duy-tri-hoc-bong-ho-tro-tai-chinh#4[student]
+   |                                  | không filter: điểm 2 | duy-tri-hoc-bong-ho-tro-tai-chinh#2[student], duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], faq-hoc-phi-hoc-bong#3[all]
+   |                                  | trả lời không filter: Nếu điểm trung bình năm học đạt 2,8 (từ 2,50 - 3,19), sinh viên sẽ được duy trì học bổng có điều kiện và được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập, không bị tự động hạ học bổng ngay lập tức [1].
+Q3 | tree+bm25+hyde                   | có filter  : điểm 1 | duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], duy-tri-hoc-bong-ho-tro-tai-chinh#2[student], duy-tri-hoc-bong-ho-tro-tai-chinh#4[student]
+   |                                  | không filter: điểm 2 | duy-tri-hoc-bong-ho-tro-tai-chinh#2[student], duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], faq-hoc-phi-hoc-bong#2[all]
+   |                                  | trả lời không filter: Nếu điểm trung bình chung năm học đạt 2,8 (từ 2,50 - 3,19), sinh viên sẽ được duy trì học bổng có điều kiện và được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập và thể hiện tố chất E.X.C.E.L. Điểm trung bình chung học tập và thành tích E.X.C.E.L tại thời điểm đánh giá lại sẽ được sử dụng để 
+Q3 | full[mmarco-mMiniLMv2-L12-H384]  | có filter  : điểm 1 | duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], duy-tri-hoc-bong-ho-tro-tai-chinh#2[student], duy-tri-hoc-bong-ho-tro-tai-chinh#4[student]
+   |                                  | không filter: điểm 1 | duy-tri-hoc-bong-ho-tro-tai-chinh#3[student], duy-tri-hoc-bong-ho-tro-tai-chinh#2[student], faq-hoc-phi-hoc-bong#6[all]
+   |                                  | trả lời không filter: Học bổng 100% yêu cầu duy trì điểm trung bình chung tích lũy (CGPA) từ 3,2 trở lên. Nếu điểm trung bình năm học đạt 2,8 (từ 2,50 - 3,19), sinh viên sẽ được duy trì học bổng có điều kiện và được gia hạn thêm 1 học kỳ để nâng cao thành tích học tập và thể hiện tố chất E.X.C.E.L. Điểm và thành tích tại
+Q5 | fixed_size                       | có filter  : điểm 1 | ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student], ho-tro-tai-chinh-sinh-vien-dang-hoc#1[student], quy-dinh-tai-chinh-bieu-phi#53[student]
+   |                                  | không filter: điểm 1 | ho-tro-tai-chinh-tan-sinh-vien#2[all], ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student], ho-tro-tai-chinh-sinh-vien-dang-hoc#1[student]
+   |                                  | trả lời không filter: Hạn nộp hồ sơ Hỗ trợ Tài chính cho học kỳ mùa Thu là trước 23:59 ngày 15 của tháng liền kề trước học kỳ đó. Hồ sơ nộp sau thời hạn này sẽ được xét vào vòng kế tiếp và kết quả công bố vào ngày 15 của tháng tiếp theo [1].
+Q5 | by_sentences                     | có filter  : điểm 1 | ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student], duy-tri-hoc-bong-ho-tro-tai-chinh#12[student], quy-dinh-tai-chinh-bieu-phi#66[student]
+   |                                  | không filter: điểm 1 | ho-tro-tai-chinh-tan-sinh-vien#2[all], ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student], faq-hoc-phi-hoc-bong#3[all]
+   |                                  | trả lời không filter: Hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu là trước 23:59 ngày 15 của tháng liền kề trước kỳ học [1].
+Q5 | recursive                        | có filter  : điểm 1 | ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student], ho-tro-tai-chinh-sinh-vien-dang-hoc#1[student], quy-dinh-tai-chinh-bieu-phi#74[student]
+   |                                  | không filter: điểm 1 | ho-tro-tai-chinh-tan-sinh-vien#1[all], ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student], ho-tro-tai-chinh-sinh-vien-dang-hoc#1[student]
+   |                                  | trả lời không filter: Hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu là vào kỳ xét Hỗ trợ Tài chính tháng 7 hàng năm [3].
+Q5 | structure_leaf                   | có filter  : điểm 0 | quy-dinh-tai-chinh-bieu-phi#46[student], quy-dinh-tai-chinh-bieu-phi#22[student], quy-dinh-tai-chinh-bieu-phi#48[student]
+   |                                  | không filter: điểm 0 | faq-hoc-phi-hoc-bong#2[all], ho-tro-tai-chinh-tan-sinh-vien#1[all], quy-dinh-tai-chinh-bieu-phi#46[student]
+   |                                  | trả lời không filter: Không tìm thấy thông tin trong tài liệu được cung cấp về hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ Mùa Thu.
+Q5 | structure_tree                   | có filter  : điểm 0 | quy-dinh-tai-chinh-bieu-phi#25[student], quy-dinh-tai-chinh-bieu-phi#30[student], quy-dinh-tai-chinh-bieu-phi#23[student]
+   |                                  | không filter: điểm 0 | ho-tro-tai-chinh-tan-sinh-vien#0[all], quy-dinh-tai-chinh-bieu-phi#25[student], hoc-phi-cu-nhan#3[all]
+   |                                  | trả lời không filter: Hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu là trước 23:59 ngày 15 của tháng liền kề trước học kỳ mùa Thu. Kết quả xét hỗ trợ tài chính được công bố vào ngày 15 hàng tháng [1].
+Q5 | tree+bm25                        | có filter  : điểm 0 | duy-tri-hoc-bong-ho-tro-tai-chinh#4[student], quy-dinh-tai-chinh-bieu-phi#23[student], quy-dinh-tai-chinh-bieu-phi#24[student]
+   |                                  | không filter: điểm 0 | ho-tro-tai-chinh-tan-sinh-vien#0[all], quy-dinh-tai-chinh-bieu-phi#23[student], duy-tri-hoc-bong-ho-tro-tai-chinh#4[student]
+   |                                  | trả lời không filter: Hạn nộp hồ sơ xin Hỗ trợ Tài chính cho học kỳ mùa Thu là trước 23:59 ngày 15 của tháng liền kề trước học kỳ mùa Thu. Kết quả xét duyệt được công bố vào ngày 15 hàng tháng [1].
+Q5 | tree+bm25+hyde                   | có filter  : điểm 1 | quy-dinh-tai-chinh-bieu-phi#25[student], ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student], duy-tri-hoc-bong-ho-tro-tai-chinh#3[student]
+   |                                  | không filter: điểm 1 | ho-tro-tai-chinh-tan-sinh-vien#0[all], quy-dinh-tai-chinh-bieu-phi#25[student], ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student]
+   |                                  | trả lời không filter: Hạn nộp hồ sơ xin Hỗ trợ Tài chính cho học kỳ mùa Thu là trước 23:59 ngày 15 của tháng liền kề trước học kỳ mùa Thu bắt đầu. Kết quả xét duyệt sẽ được công bố vào ngày 15 hàng tháng [1].
+Q5 | full[mmarco-mMiniLMv2-L12-H384]  | có filter  : điểm 2 | huong-dan-de-nghi-ho-tro-tai-chinh#4[student], huong-dan-de-nghi-ho-tro-tai-chinh#2[student], ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student]
+   |                                  | không filter: điểm 2 | huong-dan-de-nghi-ho-tro-tai-chinh#4[student], huong-dan-de-nghi-ho-tro-tai-chinh#2[student], ho-tro-tai-chinh-sinh-vien-dang-hoc#0[student]
+   |                                  | trả lời không filter: Hạn nộp hồ sơ xin hỗ trợ tài chính cho học kỳ mùa Thu là ngày 10 tháng 7 hàng năm [1], [2].
+
+(thời gian chạy: 54s)

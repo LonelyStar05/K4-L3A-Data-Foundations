@@ -1,0 +1,9 @@
+# Extra dependencies for the corpus pipeline (scripts/build_corpus.py) and the advanced
+# retrieval pipeline (rag/, bench.py). Not needed for pytest — see requirements.txt.
+#   pip install -r requirements.txt -r requirements-rag.txt
+openai>=1.40
+pymupdf>=1.24          # PDF -> text with font/bold info and table detection
+beautifulsoup4>=4.12   # HTML -> Markdown
+lxml>=5.0
+sentence-transformers==5.6.0   # cross-encoder reranker (BAAI/bge-reranker-v2-m3, ~2.3 GB download)
+# If the Hugging Face download stalls at 0 bytes, set HF_HUB_DISABLE_XET=1 to use plain HTTP.
